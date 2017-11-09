@@ -15,13 +15,14 @@ public final class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String API_KEY =
-            "";
+    private static final String API_KEY = "";
 
     private static final String IMAGE_URL =
             "http://image.tmdb.org/t/p/w342";
 
     private static final String FORECAST_BASE_URL = "http://api.themoviedb.org/3/movie/";
+    public static final String TRAILERS_PATH = "%s/videos";
+    public static final String REVIEWS_PATH = "%s/reviews";
     public static final String SORT_POPULAR_PATH = "popular";
     public static final String SORT_TOP_RATED_PATH = "top_rated";
 

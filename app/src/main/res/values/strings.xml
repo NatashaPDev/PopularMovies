@@ -3,4 +3,8 @@
     <string name="action_popular">Popular</string>
     <string name="action_top_rated">Top rated</string>
     <string name="movie_image">Movie image</string>
+    <string name="trailer_name_content_description">Trailer name</string>
+    <string name="trailers_title">Trailers</string>
+    <string name="reviews_title">Reviews</string>
+    <string name="action_favorite">Favorite</string>
 </resources>

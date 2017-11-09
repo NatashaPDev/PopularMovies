@@ -22,6 +22,9 @@
         </activity>
         <activity android:name=".MovieDetailActivity">
         </activity>
+        <provider
+            android:authorities="com.natashapetrenko.popularmovies"
+            android:name=".data.MovieProvider"></provider>
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@ package com.natashapetrenko.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -14,11 +15,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.natashapetrenko.popularmovies.data.MovieContract;
 import com.natashapetrenko.popularmovies.utilities.NetworkUtils;
 import com.natashapetrenko.popularmovies.utilities.OpenMoviesJsonUtils;
 
 import java.net.URL;
 import java.util.List;
+import java.util.ListIterator;
 
 public class MainActivity extends AppCompatActivity implements ForecastAdapter.ListItemClickListener {
     private static final String TAG = "MainActivity";
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.L
 
     private RecyclerView mRecyclerView;
     private ForecastAdapter mAdapter;
+    private boolean mFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.L
     @Override
     public void onItemClick(Movie movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra("Id", movie.getId());
         intent.putExtra("Title", movie.getTitle());
         intent.putExtra("ImagePath", movie.getImagePath());
         intent.putExtra("UserRating", movie.getUserRating());
@@ -92,6 +97,23 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.L
 
                 movieList = OpenMoviesJsonUtils.getMoviesFromJson(jsonMoviesResponse);
                 cashedPath = path;
+
+                if (mFavorite) {
+                    Cursor cursor = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
+                    if (cursor.getCount() > 0) {
+                        while (cursor.moveToNext()) {
+                            ListIterator<Movie> iterator = movieList.listIterator();
+                            while (iterator.hasNext()) {
+                                //iterator.next();
+                                if (iterator.next().getId() != Integer.parseInt(cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry._ID)))) {
+                                    iterator.remove();
+                                }
+                            }
+                        }
+                    } else {
+                        movieList.clear();
+                    }
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -123,10 +145,17 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapter.L
             case R.id.action_popular:
                 loadMovies(NetworkUtils.SORT_POPULAR_PATH);
                 item.setChecked(true);
+                mFavorite = false;
                 return true;
             case R.id.action_top_rated:
                 loadMovies(NetworkUtils.SORT_TOP_RATED_PATH);
                 item.setChecked(true);
+                mFavorite = false;
+                return true;
+            case R.id.action_favorite:
+                loadMovies(cashedPath);
+                item.setChecked(true);
+                mFavorite = true;
                 return true;
         }
 
