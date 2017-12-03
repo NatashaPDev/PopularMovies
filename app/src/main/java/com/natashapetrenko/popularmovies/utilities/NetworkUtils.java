@@ -15,7 +15,7 @@ public final class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String API_KEY = "";
+    private static final String API_KEY = "f7db0b52942799946f17d1edefc083d1";
 
     private static final String IMAGE_URL =
             "http://image.tmdb.org/t/p/w342";
